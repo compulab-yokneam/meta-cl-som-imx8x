@@ -1,0 +1,25 @@
+From 1d9ad037c89827039f14917f8587914647ffe1f9 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Wed, 25 Sep 2019 17:34:55 +0300
+Subject: [PATCH] cl-som-imx8x: allow access to SC_R_SYSTEM in order to allow
+ sc_pm_reset() call in u-boot and linux
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ plat/imx/imx8qx/include/sec_rsrc.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plat/imx/imx8qx/include/sec_rsrc.h b/plat/imx/imx8qx/include/sec_rsrc.h
+index c3a952aa..71c3ee6f 100644
+--- a/plat/imx/imx8qx/include/sec_rsrc.h
++++ b/plat/imx/imx8qx/include/sec_rsrc.h
+@@ -27,5 +27,6 @@ sc_rsrc_t secure_rsrcs[] = {
+ /* resources that have register access for non-secure domain */
+ sc_rsrc_t ns_access_allowed[] = {
+ 	SC_R_GIC,
++	SC_R_SYSTEM,
+ 	SC_R_GPT_0,
+ };
+-- 
+2.11.0
+
