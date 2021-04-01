@@ -1,9 +1,15 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/cl-som-imx8x:"
+
 SRC_URI_append_cl-som-imx8x = " \
-	file://0001-Upgrade-SCFW-API-to-v1.5-for-compatibility-with-imx-.patch	\
-	file://0002-common-eeprom-eeprom_layout-and-eeprom_field-API-upd.patch	\
-	file://0003-compatibility-update-common-eeprom-access-API.patch		\
-	file://0004-eeprom_cmd-add-i2c_read-and-i2c_write-by-DM_I2C-prot.patch	\
-	file://0005-cl-som-imx8x-Add-CL-SOM-iMX8X-board-to-U-Boot.patch		\
-	file://0006-cl-som-imx8x-Add-CL-SOM-iMX8X-build-option-to-Make-t.patch	\
-	file://cl-som-imx8x_defconfig 						\
+	file://0001-cmd-eeprom-fix-disregarding-of-the-i2c_bus-parameter.patch	\
+	file://0002-eeprom-layout-remove-buf-from-the-eeprom_field-struc.patch	\
+	file://0003-eeprom-layout-add-field-functions-read.patch		\
+	file://0004-compulab-eeprom-layout-add-read-serial-function.patch	\
+	file://0005-compulab-eeprom-layout-add-layout-setup-function.patch	\
+	file://0006-compulab-eeprom-layout-support-layout-version-4.patch	\
+	file://0007-compulab-eeprom-layout-forward-compatibility.patch		\
+	file://0008-compulab-integrate-DM_I2C-in-EEPROM-driver.patch		\
+	file://0009-compulab-eeprom-Add-DM-support.patch			\
+	file://0010-cl-som-imx8x-Add-CL-SOM-iMX8X-board-to-U-Boot.patch		\
+	file://0011-Release-cl-som-imx8x-2.0.patch				\
 "

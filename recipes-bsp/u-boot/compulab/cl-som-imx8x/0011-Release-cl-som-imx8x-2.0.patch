@@ -1,0 +1,25 @@
+From 86401e509e5bb8382064a68d706e5b19994334d3 Mon Sep 17 00:00:00 2001
+From: Uri Mashiach <uri.mashiach@compulab.co.il>
+Date: Wed, 31 Mar 2021 11:08:57 +0300
+Subject: [PATCH 11/11] Release cl-som-imx8x-2.0
+
+Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
+---
+ configs/cl-som-imx8x_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configs/cl-som-imx8x_defconfig b/configs/cl-som-imx8x_defconfig
+index 45ba29d3e9..9db5bbfe36 100644
+--- a/configs/cl-som-imx8x_defconfig
++++ b/configs/cl-som-imx8x_defconfig
+@@ -26,6 +26,7 @@ CONFIG_SPL_SPI_SUPPORT=y
+ CONFIG_IMX_BOOTAUX=y
+ CONFIG_IMX_VSERVICE_SHARED_BUFFER=0x90400000
+ CONFIG_SPL_TEXT_BASE=0x100000
++CONFIG_LOCALVERSION="-cl-som-imx8x-2.0"
+ # CONFIG_ANDROID_BOOT_IMAGE is not set
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/compulab/cl-som-imx8x/cl-som-imx8x.cfg"
+-- 
+2.11.0
+

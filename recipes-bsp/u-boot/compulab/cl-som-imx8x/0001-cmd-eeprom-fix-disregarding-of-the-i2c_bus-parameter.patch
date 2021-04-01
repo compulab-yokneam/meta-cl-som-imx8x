@@ -1,0 +1,132 @@
+From 0d9b8fc09aee383a8b50d332214cff825bd7cd72 Mon Sep 17 00:00:00 2001
+From: Uri Mashiach <uri.mashiach@compulab.co.il>
+Date: Tue, 29 Dec 2020 13:49:11 +0200
+Subject: [PATCH 01/11] cmd: eeprom: fix disregarding of the i2c_bus parameter
+
+The eeprom commands are disregarding the i2c_bus parameter if
+CONFIG_SYS_I2C_EEPROM_BUS is defined - setting the i2c bus to
+CONFIG_SYS_I2C_EEPROM_BUS.
+
+Duplicate the functions eeprom_read() and eeprom_write().
+The original functions are setting the i2c bus to
+CONFIG_SYS_I2C_EEPROM_BUS.
+The new functions are not setting the i2c bus.
+
+Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
+---
+ cmd/eeprom.c | 52 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 8 deletions(-)
+
+diff --git a/cmd/eeprom.c b/cmd/eeprom.c
+index 667149e2d4..e5244d8bb0 100644
+--- a/cmd/eeprom.c
++++ b/cmd/eeprom.c
+@@ -161,7 +161,7 @@ static int eeprom_rw_block(unsigned offset, uchar *addr, unsigned alen,
+ }
+ 
+ static int eeprom_rw(unsigned dev_addr, unsigned offset, uchar *buffer,
+-		     unsigned cnt, bool read)
++		     unsigned cnt, bool read, int set_bus)
+ {
+ 	unsigned end = offset + cnt;
+ 	unsigned alen, len;
+@@ -169,7 +169,8 @@ static int eeprom_rw(unsigned dev_addr, unsigned offset, uchar *buffer,
+ 	uchar addr[3];
+ 
+ #if defined(CONFIG_SYS_I2C_EEPROM_BUS)
+-	eeprom_init(CONFIG_SYS_I2C_EEPROM_BUS);
++	if (set_bus)
++		eeprom_init(CONFIG_SYS_I2C_EEPROM_BUS);
+ #endif
+ 
+ 	while (offset < end) {
+@@ -196,7 +197,19 @@ int eeprom_read(unsigned dev_addr, unsigned offset, uchar *buffer, unsigned cnt)
+ 	 * We must write the address again when changing pages
+ 	 * because the next page may be in a different device.
+ 	 */
+-	return eeprom_rw(dev_addr, offset, buffer, cnt, 1);
++	return eeprom_rw(dev_addr, offset, buffer, cnt, 1, 1);
++}
++
++/* Function eeprom_read without setting i2c bus */
++static int eeprom_read_no_bus_set(unsigned dev_addr, unsigned offset,
++				  uchar *buffer, unsigned cnt)
++{
++	/*
++	 * Read data until done or would cross a page boundary.
++	 * We must write the address again when changing pages
++	 * because the next page may be in a different device.
++	 */
++	return eeprom_rw(dev_addr, offset, buffer, cnt, 1, 0);
+ }
+ 
+ int eeprom_write(unsigned dev_addr, unsigned offset,
+@@ -211,7 +224,26 @@ int eeprom_write(unsigned dev_addr, unsigned offset,
+ 	 * We must write the address again when changing pages
+ 	 * because the address counter only increments within a page.
+ 	 */
+-	ret = eeprom_rw(dev_addr, offset, buffer, cnt, 0);
++	ret = eeprom_rw(dev_addr, offset, buffer, cnt, 0, 1);
++
++	eeprom_write_enable(dev_addr, 0);
++	return ret;
++}
++
++/* Function eeprom_write without setting i2c bus */
++static int eeprom_write_no_bus_set(unsigned dev_addr, unsigned offset,
++		 uchar *buffer, unsigned cnt)
++{
++	int ret;
++
++	eeprom_write_enable(dev_addr, 1);
++
++	/*
++	 * Write data until done or would cross a write page boundary.
++	 * We must write the address again when changing pages
++	 * because the address counter only increments within a page.
++	 */
++	ret = eeprom_rw(dev_addr, offset, buffer, cnt, 0, 0);
+ 
+ 	eeprom_write_enable(dev_addr, 0);
+ 	return ret;
+@@ -320,21 +352,24 @@ static int eeprom_execute_command(enum eeprom_action action, int i2c_bus,
+ 	if (action == EEPROM_READ) {
+ 		printf(fmt, i2c_addr, "read", addr, off, cnt);
+ 
+-		rcode = eeprom_read(i2c_addr, off, (uchar *)addr, cnt);
++		rcode = eeprom_read_no_bus_set(i2c_addr, off, (uchar *)addr,
++					       cnt);
+ 
+ 		puts("done\n");
+ 		return rcode;
+ 	} else if (action == EEPROM_WRITE) {
+ 		printf(fmt, i2c_addr, "write", addr, off, cnt);
+ 
+-		rcode = eeprom_write(i2c_addr, off, (uchar *)addr, cnt);
++		rcode = eeprom_write_no_bus_set(i2c_addr, off, (uchar *)addr,
++						cnt);
+ 
+ 		puts("done\n");
+ 		return rcode;
+ 	}
+ 
+ #ifdef CONFIG_CMD_EEPROM_LAYOUT
+-	rcode = eeprom_read(i2c_addr, 0, eeprom_buf, CONFIG_SYS_EEPROM_SIZE);
++	rcode = eeprom_read_no_bus_set(i2c_addr, 0, eeprom_buf,
++				       CONFIG_SYS_EEPROM_SIZE);
+ 	if (rcode < 0)
+ 		return rcode;
+ 
+@@ -348,7 +383,8 @@ static int eeprom_execute_command(enum eeprom_action action, int i2c_bus,
+ 
+ 	layout.update(&layout, key, value);
+ 
+-	rcode = eeprom_write(i2c_addr, 0, layout.data, CONFIG_SYS_EEPROM_SIZE);
++	rcode = eeprom_write_no_bus_set(i2c_addr, 0, layout.data,
++					CONFIG_SYS_EEPROM_SIZE);
+ #endif
+ 
+ 	return rcode;
+-- 
+2.11.0
+
