@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/cl-som-imx8x:"
 
-SRC_URI_append = " file://0001-CL-SOM-iMX8X-Add-build-targets-for-CL-SOM-iMX8X.patch"
+SRC_URI_append = " file://0001-Add-build-targets-for-CL-SOM-iMX8X.patch"
 
 IMX_BOOT_IMG_NAME = "${BOOT_NAME}-${MACHINE}-${UBOOT_CONFIG}"
 IMX_BOOT_IMG_NAME_LONG = "${BOOT_CONFIG_MACHINE}-${target}"
