@@ -1,7 +1,7 @@
-From 9472102d54b4bbfc0d788ca92d593dfa47b32f99 Mon Sep 17 00:00:00 2001
+From 5d133c428809b64490b70df1ad0769d1b277f369 Mon Sep 17 00:00:00 2001
 From: Valentin Raevsky <valentin@compulab.co.il>
-Date: Tue, 19 Feb 2019 12:04:29 +0200
-Subject: [PATCH 05/13] startek-ili9881c: Add panel driver
+Date: Mon, 28 Dec 2020 11:44:58 +0200
+Subject: [PATCH 3/8] startek-ili9881c: Add panel driver
 
 Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
 ---
@@ -12,10 +12,10 @@ Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
  create mode 100644 drivers/gpu/drm/panel/panel-startek-ili9881c.c
 
 diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index eb2a74629a4b..99cb1b4e9d4b 100644
+index 4d2a854d4ab7..7daa08e8f397 100644
 --- a/drivers/gpu/drm/panel/Kconfig
 +++ b/drivers/gpu/drm/panel/Kconfig
-@@ -28,6 +28,15 @@ config DRM_PANEL_SIMPLE
+@@ -39,6 +39,15 @@ config DRM_PANEL_SIMPLE
  	  that it can be automatically turned off when the panel goes into a
  	  low power state.
  
@@ -28,19 +28,21 @@ index eb2a74629a4b..99cb1b4e9d4b 100644
 +	  Say Y if you want to enable support for panels based on the
 +	  Startek panel with an ILI9881c controller.
 +
- config DRM_PANEL_INNOLUX_P079ZCA
- 	tristate "Innolux P079ZCA panel"
+ config DRM_PANEL_FEIYANG_FY07024DI26A30D
+ 	tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
  	depends on OF
 diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 68a80b13403f..67a920c02b3b 100644
+index 6924b70adc78..2266bb2bb1d8 100644
 --- a/drivers/gpu/drm/panel/Makefile
 +++ b/drivers/gpu/drm/panel/Makefile
-@@ -12,4 +12,5 @@ obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
- obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
+@@ -33,6 +33,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LS037V7DW01) += panel-sharp-ls037v7dw01.o
  obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
 +obj-$(CONFIG_DRM_PANEL_STARTEK_ILI9881C) += panel-startek-ili9881c.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
+ obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
+ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
+ obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
 diff --git a/drivers/gpu/drm/panel/panel-startek-ili9881c.c b/drivers/gpu/drm/panel/panel-startek-ili9881c.c
 new file mode 100644
 index 000000000000..f13a22a3b25c

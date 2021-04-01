@@ -1,7 +1,7 @@
-From 7fa526b125a8e536b312442558d65927afb288bf Mon Sep 17 00:00:00 2001
+From a0fe1b94601fdf1f905ad5150374f2d8eb927d03 Mon Sep 17 00:00:00 2001
 From: Uri Mashiach <uri.mashiach@compulab.co.il>
 Date: Mon, 9 Sep 2019 17:51:51 +0300
-Subject: [PATCH 10/13] sb-imx8x: add mipi panel backlight
+Subject: [PATCH 7/8] sb-imx8x: add mipi panel backlight
 
 PWM of the mipi dsi 2 is used for backlight.
 
@@ -11,17 +11,16 @@ Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
  1 file changed, 31 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/compulab/sb-imx8x.dts b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
-index a26454e0ba03..ad660b058782 100644
+index 788ed39a9ead..a3117e259cc8 100644
 --- a/arch/arm64/boot/dts/compulab/sb-imx8x.dts
 +++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
-@@ -17,6 +17,25 @@
- / {
+@@ -18,6 +18,25 @@
  	model = "CompuLab CL-SOM-iMX8X on SB-iMX8X";
  	compatible = "compulab,sbc-imx8x", "compulab,cl-som-imx8x", "fsl,imx8qxp";
-+
+ 
 +	backlight_mipi_panel {
 +		compatible = "pwm-backlight";
-+		pwms = <&pwm_mipi_lvds1 0 100000 0>;
++		pwms = <&pwm_mipi_lvds1 0 3000000 0>;
 +		status = "okay";
 +
 +		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
@@ -37,11 +36,12 @@ index a26454e0ba03..ad660b058782 100644
 +				    100>;
 +		default-brightness-level = <80>;
 +	};
- };
- 
- &usdhc2 {
-@@ -245,6 +264,12 @@
- 	status = "okay";
++
+ 	resmem: reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -280,6 +299,12 @@
+ 	};
  };
  
 +&pwm_mipi_lvds1 {
@@ -53,19 +53,19 @@ index a26454e0ba03..ad660b058782 100644
  /* MIPI Camera */
  &mipi_csi_0 {
  	#address-cells = <1>;
-@@ -362,6 +387,12 @@
+@@ -397,6 +422,12 @@
  			>;
  		};
  
 +		pinctrl_pwm_mipi_lvds1: mipi_lvds1_pwm_grp {
 +			fsl,pins = <
-+				SC_P_MIPI_DSI1_GPIO0_00_MIPI_DSI1_PWM0_OUT	0x00000020
++				IMX8QXP_MIPI_DSI1_GPIO0_00_MIPI_DSI1_PWM0_OUT	0x00000020
 +			>;
 +		};
 +
  		pinctrl_mipi_csi0: mipicsi0grp{
  			fsl,pins = <
- 				SC_P_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT  0xC0000041
+ 				IMX8QXP_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT	0xC0000041
 -- 
 2.11.0
 

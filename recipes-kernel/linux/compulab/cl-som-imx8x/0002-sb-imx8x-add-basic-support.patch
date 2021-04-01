@@ -1,7 +1,7 @@
-From b0492218b02d039db8380cc86e6a4528f455a248 Mon Sep 17 00:00:00 2001
+From 79e2ca4afc61a833815e70e947f5cd292ce751a7 Mon Sep 17 00:00:00 2001
 From: Uri Mashiach <uri.mashiach@compulab.co.il>
 Date: Mon, 1 Jul 2019 13:52:19 +0300
-Subject: [PATCH 02/13] sb-imx8x: add basic support
+Subject: [PATCH 2/8] sb-imx8x: add basic support
 
 Basic support for the SB-iMX8X board.
 The board is used as the evaluation baseboard for the CL-SOM-iMX8X module.
@@ -14,28 +14,28 @@ Add the following support:
 Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
 ---
  arch/arm64/boot/dts/compulab/Makefile     |   3 +-
- arch/arm64/boot/dts/compulab/sb-imx8x.dts | 253 ++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/compulab/sb-imx8x.dts | 307 ++++++++++++++++++++++++++++++
  arch/arm64/configs/cl-som-imx8x_defconfig |   5 +-
- 3 files changed, 259 insertions(+), 2 deletions(-)
+ 3 files changed, 313 insertions(+), 2 deletions(-)
  create mode 100644 arch/arm64/boot/dts/compulab/sb-imx8x.dts
 
 diff --git a/arch/arm64/boot/dts/compulab/Makefile b/arch/arm64/boot/dts/compulab/Makefile
-index 0f7a5947e795..040a0730be9f 100644
+index 8b75be9a4202..b7b02219498d 100644
 --- a/arch/arm64/boot/dts/compulab/Makefile
 +++ b/arch/arm64/boot/dts/compulab/Makefile
 @@ -1,4 +1,5 @@
--dtb-$(CONFIG_ARCH_FSL_IMX8QXP) += cl-som-imx8x.dtb
-+dtb-$(CONFIG_ARCH_FSL_IMX8QXP) += cl-som-imx8x.dtb \
-+				  sb-imx8x.dtb
+-dtb-$(CONFIG_ARCH_MXC) += cl-som-imx8x.dtb
++dtb-$(CONFIG_ARCH_MXC) += cl-som-imx8x.dtb \
++			  sb-imx8x.dtb
  
  always         := $(dtb-y)
  subdir-y       := $(dts-dirs)
 diff --git a/arch/arm64/boot/dts/compulab/sb-imx8x.dts b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
 new file mode 100644
-index 000000000000..bd1209056055
+index 000000000000..318bba7b3cfb
 --- /dev/null
 +++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
-@@ -0,0 +1,253 @@
+@@ -0,0 +1,307 @@
 +/*
 + * Copyright 2019 CompuLab
 + *
@@ -55,27 +55,48 @@ index 000000000000..bd1209056055
 +/ {
 +	model = "CompuLab CL-SOM-iMX8X on SB-iMX8X";
 +	compatible = "compulab,sbc-imx8x", "compulab,cl-som-imx8x", "fsl,imx8qxp";
++
++	resmem: reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		encoder_boot: encoder-boot@86000000 {
++			reg = <0 0x86000000 0 0x200000>;
++			no-map;
++		};
++
++		encoder_rpc: encoder-rpc@0x92200000 {
++			reg = <0 0x92200000 0 0x200000>;
++			no-map;
++		};
++
++		encoder_reserved: encoder_reserved@94400000 {
++			no-map;
++			reg = <0 0x94400000 0 0x800000>;
++		};
++	};
 +};
 +
 +&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio4 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
++	inctrl-names = "default", "state_100mhz", "state_200mhz";
++	inctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	inctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	inctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	us-width = <4>;
++	d-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
++	p-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
++	tatus = "okay";
 +};
 +
 +&i2c1 {
-+	eeprom@54 {
-+		compatible = "atmel,24c08";
-+		reg = <0x54>;
-+		pagesize = <16>;
++	eprom@54 {
++	       compatible = "atmel,24c04";
++	       reg = <0x54>;
++	       pagesize = <16>;
 +	};
 +
-+	pca9555_sb: pca9555_sb@20 {
++	pca9555: pca9555@20 {
 +		compatible = "nxp,pca9555";
 +		gpio-controller;
 +		#gpio-cells = <2>;
@@ -84,6 +105,30 @@ index 000000000000..bd1209056055
 +};
 +
 +/* GPU */
++&vpu_encoder {
++	boot-region = <&encoder_boot>;
++	rpc-region = <&encoder_rpc>;
++	reserved-region = <&encoder_reserved>;
++	reg-rpc-system = <0x40000000>;
++	resolution-max = <1920 1920>;
++	mbox-names = "enc1_tx0", "enc1_tx1", "enc1_rx";
++	mboxes = <&mu1_m0 0 0
++		  &mu1_m0 0 1
++		  &mu1_m0 1 0>;
++	status = "okay";
++
++	core0@1020000 {
++		compatible = "fsl,imx8-mu1-vpu-m0";
++		reg = <0x1020000 0x20000>;
++		reg-csr = <0x1050000 0x10000>;
++		interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>;
++		fsl,vpu_ap_mu_id = <17>;
++		fw-buf-size = <0x200000>;
++		rpc-buf-size = <0x80000>;
++		print-buf-size = <0x80000>;
++	};
++};
++
 +&gpu_3d0 {
 +        status = "okay";
 +};
@@ -92,67 +137,67 @@ index 000000000000..bd1209056055
 +        status = "okay";
 +};
 +
-+&pixel_combiner {
++&dc0_pc {
 +        status = "okay";
 +};
 +
-+&prg1 {
++&dc0_prg1 {
 +        status = "okay";
 +};
 +
-+&prg2 {
++&dc0_prg2 {
 +        status = "okay";
 +};
 +
-+&prg3 {
++&dc0_prg3 {
 +        status = "okay";
 +};
 +
-+&prg4 {
++&dc0_prg4 {
 +        status = "okay";
 +};
 +
-+&prg5 {
++&dc0_prg5 {
 +        status = "okay";
 +};
 +
-+&prg6 {
++&dc0_prg6 {
 +        status = "okay";
 +};
 +
-+&prg7 {
++&dc0_prg7 {
 +        status = "okay";
 +};
 +
-+&prg8 {
++&dc0_prg8 {
 +        status = "okay";
 +};
 +
-+&prg9 {
++&dc0_prg9 {
 +        status = "okay";
 +};
 +
-+&dpr1_channel1 {
++&dc0_dpr1_channel1 {
 +	status = "okay";
 +};
 +
-+&dpr1_channel2 {
++&dc0_dpr1_channel2 {
 +	status = "okay";
 +};
 +
-+&dpr1_channel3 {
++&dc0_dpr1_channel3 {
 +	status = "okay";
 +};
 +
-+&dpr2_channel1 {
++&dc0_dpr2_channel1 {
 +	status = "okay";
 +};
 +
-+&dpr2_channel2 {
++&dc0_dpr2_channel2 {
 +	status = "okay";
 +};
 +
-+&dpr2_channel3 {
++&dc0_dpr2_channel3 {
 +	status = "okay";
 +};
 +
@@ -175,36 +220,31 @@ index 000000000000..bd1209056055
 +		reg = <0x3d>;
 +		adi,dsi-lanes = <4>;
 +		adi,dsi-channel = <1>;
-+		interrupt-parent = <&gpio1>;
++		interrupt-parent = <&lsio_gpio1>;
 +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
 +		status = "okay";
 +
 +		port {
-+			adv7535_1_in: endpoint {
-+				remote-endpoint = <&mipi_dsi_bridge1_out>;
++			adv7535_0_in: endpoint {
++				remote-endpoint = <&mipi0_adv_out>;
 +			};
 +		};
 +	};
 +
 +};
 +
-+&mipi_dsi1 {
-+	pwr-delay = <10>;
++&mipi0_dphy {
 +	status = "okay";
 +};
 +
-+&mipi_dsi_bridge1 {
++&mipi0_dsi_host {
 +	status = "okay";
 +
 +	port@1 {
-+		mipi_dsi_bridge1_out: endpoint {
-+			remote-endpoint = <&adv7535_1_in>;
++		mipi0_adv_out: endpoint {
++			remote-endpoint = <&adv7535_0_in>;
 +		};
 +	};
-+};
-+
-+&mipi_dsi_phy1 {
-+	status = "okay";
 +};
 +
 +/* CAN bus */
@@ -220,80 +260,94 @@ index 000000000000..bd1209056055
 +	status = "okay";
 +};
 +
++/* RS485 HD */
++&lpuart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lpuart2>;
++	status = "okay";
++};
++
 +&iomuxc {
-+	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
-+		fsl,pins = <
-+			SC_P_USDHC1_RESET_B_LSIO_GPIO4_IO19	0x00000021
-+			SC_P_USDHC1_WP_LSIO_GPIO4_IO21		0x00000021
-+			SC_P_USDHC1_CD_B_LSIO_GPIO4_IO22	0x00000021
-+		>;
-+	};
++	sb-imx8x {
++		pinctrl_usdhc2_gpio: usdhc2gpiogrp {
++			fsl,pins = <
++				IMX8QXP_USDHC1_RESET_B_LSIO_GPIO4_IO19	0x00000021
++				IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21	0x00000021
++				IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22	0x00000021
++			>;
++		};
 +
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			SC_P_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
-+			SC_P_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
-+			SC_P_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+			SC_P_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+			SC_P_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+			SC_P_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+			SC_P_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+		>;
-+	};
++		pinctrl_usdhc2: usdhc2grp {
++			fsl,pins = <
++				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
++				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
++				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x00000021
++				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x00000021
++				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x00000021
++				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x00000021
++				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
++			>;
++		};
 +
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins = <
-+			SC_P_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
-+			SC_P_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
-+			SC_P_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+			SC_P_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+			SC_P_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+			SC_P_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+			SC_P_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+		>;
-+	};
++		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++			fsl,pins = <
++				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
++				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
++				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x00000021
++				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x00000021
++				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x00000021
++				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x00000021
++				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
++			>;
++		};
 +
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins = <
-+			SC_P_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
-+			SC_P_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
-+			SC_P_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+			SC_P_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+			SC_P_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+			SC_P_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+			SC_P_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+		>;
-+	};
-+	imx8qxp-mek {
++		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++			fsl,pins = <
++				IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041
++				IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x00000021
++				IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0		0x00000021
++				IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1		0x00000021
++				IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2		0x00000021
++				IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3		0x00000021
++				IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
++			>;
++		};
++
 +		pinctrl_i2c0_mipi_lvds0: mipi_lvds0_i2c0_grp {
 +			fsl,pins = <
-+				SC_P_MIPI_DSI0_I2C0_SCL_MIPI_DSI0_I2C0_SCL	0xc6000020
-+				SC_P_MIPI_DSI0_I2C0_SDA_MIPI_DSI0_I2C0_SDA	0xc6000020
-+				SC_P_MIPI_DSI0_GPIO0_01_LSIO_GPIO1_IO28		0x00000020
++				IMX8QXP_MIPI_DSI0_I2C0_SCL_MIPI_DSI0_I2C0_SCL	0xc6000020
++				IMX8QXP_MIPI_DSI0_I2C0_SDA_MIPI_DSI0_I2C0_SDA	0xc6000020
++				IMX8QXP_MIPI_DSI0_GPIO0_01_LSIO_GPIO1_IO28	0x00000020
 +			>;
 +		};
 +
 +		pinctrl_flexcan1: flexcan0grp {
 +			fsl,pins = <
-+				SC_P_FLEXCAN0_TX_ADMA_FLEXCAN0_TX		0x00000021
-+				SC_P_FLEXCAN0_RX_ADMA_FLEXCAN0_RX		0x00000021
++				IMX8QXP_FLEXCAN0_TX_ADMA_FLEXCAN0_TX	0x00000021
++				IMX8QXP_FLEXCAN0_RX_ADMA_FLEXCAN0_RX	0x00000021
 +			>;
 +		};
 +
 +		pinctrl_flexcan3: flexcan3grp {
 +			fsl,pins = <
-+				SC_P_FLEXCAN2_TX_ADMA_FLEXCAN2_TX		0x00000021
-+				SC_P_FLEXCAN2_RX_ADMA_FLEXCAN2_RX		0x00000021
++				IMX8QXP_FLEXCAN2_TX_ADMA_FLEXCAN2_TX	0x00000021
++				IMX8QXP_FLEXCAN2_RX_ADMA_FLEXCAN2_RX	0x00000021
++			>;
++		};
++
++		pinctrl_lpuart2: lpuart2grp {
++			fsl,pins = <
++				IMX8QXP_UART2_RX_ADMA_UART2_RX	0x06000020
++				IMX8QXP_UART2_TX_ADMA_UART2_TX	0x06000020
 +			>;
 +		};
 +	};
 +};
-+
 diff --git a/arch/arm64/configs/cl-som-imx8x_defconfig b/arch/arm64/configs/cl-som-imx8x_defconfig
-index 19304085c150..9278f1aff92c 100644
+index 33ff0d609445..08b323c60d01 100644
 --- a/arch/arm64/configs/cl-som-imx8x_defconfig
 +++ b/arch/arm64/configs/cl-som-imx8x_defconfig
-@@ -154,7 +154,10 @@ CONFIG_VLAN_8021Q_MVRP=y
+@@ -116,7 +116,10 @@ CONFIG_VLAN_8021Q_MVRP=y
  CONFIG_LLC2=y
  CONFIG_BPF_JIT=y
  CONFIG_CAN=y

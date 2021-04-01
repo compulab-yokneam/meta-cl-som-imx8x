@@ -1,7 +1,7 @@
-From 44612eae33ac8da352af1070095a2699c7bc474a Mon Sep 17 00:00:00 2001
+From 06df504446c2b3746873f45c79bb581b6056f2a3 Mon Sep 17 00:00:00 2001
 From: Uri Mashiach <uri.mashiach@compulab.co.il>
 Date: Thu, 4 Jul 2019 14:22:30 +0300
-Subject: [PATCH 08/13] sb-imx8x: enable the Goodix touch panel
+Subject: [PATCH 6/8] sb-imx8x: enable the Goodix touch panel
 
 The Goodix touch panel is included in the Startek ili9881c panel.
 The panel's touchscreen controller is connected to the MIPI DSI1 I2C.
@@ -10,17 +10,19 @@ Enable the MIPI DSI I2C and the Goodix touch panel driver.
 
 Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
 ---
- arch/arm64/boot/dts/compulab/sb-imx8x.dts | 34 +++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/compulab/sb-imx8x.dts | 35 ++++++++++++++++++++++++++++++-
  arch/arm64/configs/cl-som-imx8x_defconfig |  2 ++
- 2 files changed, 36 insertions(+)
+ 2 files changed, 36 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/compulab/sb-imx8x.dts b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
-index 4482bf79cc8f..9abb25afdcf7 100644
+index 4d81cd84c5fd..788ed39a9ead 100644
 --- a/arch/arm64/boot/dts/compulab/sb-imx8x.dts
 +++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
-@@ -191,6 +191,27 @@
+@@ -230,8 +230,28 @@
+ 	};
  };
  
+-
  /* MIPI Panel */
 +&i2c0_mipi_lvds1 {
 +	#address-cells = <1>;
@@ -33,52 +35,52 @@ index 4482bf79cc8f..9abb25afdcf7 100644
 +	goodix_ts@5d {
 +		compatible = "goodix,gt911";
 +		reg = <0x5d>;
-+		interrupt-parent = <&gpio2>;
++		interrupt-parent = <&lsio_gpio2>;
 +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&pinctrl_touchscreen>;
-+		irq-gpios = <&gpio2 0 GPIO_ACTIVE_HIGH>;
++		irq-gpios = <&lsio_gpio2 0 GPIO_ACTIVE_HIGH>;
 +		reset-gpios = <&pca9555 10 GPIO_ACTIVE_HIGH>;
 +		status = "okay";
 +	};
 +};
 +
- &mipi_dsi2 {
- 	pwr-delay = <10>;
+ &mipi1_dphy {
  	status = "okay";
-@@ -321,6 +342,19 @@
+ };
+@@ -364,6 +384,19 @@
  			>;
  		};
  
 +		pinctrl_i2c0_mipi_lvds1: mipi_lvds0_i2c1_grp {
 +			fsl,pins = <
-+				SC_P_MIPI_DSI1_I2C0_SCL_MIPI_DSI1_I2C0_SCL	0xc6000020
-+				SC_P_MIPI_DSI1_I2C0_SDA_MIPI_DSI1_I2C0_SDA	0xc6000020
++				IMX8QXP_MIPI_DSI1_I2C0_SCL_MIPI_DSI1_I2C0_SCL	0xc6000020
++				IMX8QXP_MIPI_DSI1_I2C0_SDA_MIPI_DSI1_I2C0_SDA	0xc6000020
 +			>;
 +		};
 +
 +		pinctrl_touchscreen: touchscreengrp{
 +			fsl,pins = <
-+				SC_P_MIPI_DSI1_GPIO0_01_LSIO_GPIO2_IO00		0x00000041
++				IMX8QXP_MIPI_DSI1_GPIO0_01_LSIO_GPIO2_IO00	0x00000041
 +			>;
 +		};
 +
  		pinctrl_mipi_csi0: mipicsi0grp{
  			fsl,pins = <
- 				SC_P_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT  0xC0000041
+ 				IMX8QXP_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT	0xC0000041
 diff --git a/arch/arm64/configs/cl-som-imx8x_defconfig b/arch/arm64/configs/cl-som-imx8x_defconfig
-index 3615e06dd02b..6493a4d82e57 100644
+index e8d000d78b6b..e0a4414b4e5f 100644
 --- a/arch/arm64/configs/cl-som-imx8x_defconfig
 +++ b/arch/arm64/configs/cl-som-imx8x_defconfig
-@@ -288,6 +288,8 @@ CONFIG_KEYBOARD_GPIO=y
- CONFIG_KEYBOARD_IMX_SC_PWRKEY=y
+@@ -240,6 +240,8 @@ CONFIG_KEYBOARD_ADC=m
+ CONFIG_KEYBOARD_GPIO=y
  CONFIG_KEYBOARD_CROS_EC=y
  CONFIG_INPUT_TOUCHSCREEN=y
 +# CONFIG_TOUCHSCREEN_CT36X_WLD is not set
 +CONFIG_TOUCHSCREEN_GOODIX=m
  CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_I2C=y
  CONFIG_INPUT_MISC=y
- CONFIG_INPUT_PM8941_PWRKEY=y
+ CONFIG_INPUT_MPL3115=y
 -- 
 2.11.0
 
