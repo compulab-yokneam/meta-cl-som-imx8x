@@ -4,7 +4,7 @@ EULA=1
 
 . imx-setup-release.sh $@
 
-declare -a ENVIRONMENT=('../sources/meta-compulab-bsp/meta-cl-som-imx8x/tools/setup-compulab-env')
+declare -a ENVIRONMENT=('../sources/meta-cl-som-imx8x/tools/setup-compulab-env')
 
 for env in ${ENVIRONMENT[@]};do
 	[ -f ${env} ] && FORCE=Yes source ${env}

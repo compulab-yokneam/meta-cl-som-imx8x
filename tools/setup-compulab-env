@@ -45,7 +45,7 @@ get_meta_compulab
 # A mandatory bsp layer: kernel
 cat << eof | tee -a ${BBLAYERS_CONF} > /dev/null
 BBLAYERS += " \\
-	\${BSPDIR}/sources/meta-compulab-bsp/meta-cl-som-imx8x \\
+	\${BSPDIR}/sources/meta-cl-som-imx8x \\
 	\${BSPDIR}/sources/meta-compulab \\
 "
 eof
