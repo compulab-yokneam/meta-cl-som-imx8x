@@ -1,7 +1,8 @@
 MACHINE=cl-som-imx8x
 DISTRO=${DISTRO:-fsl-imx-xwayland}
+EULA=1
 
-. fsl-setup-release.sh $@
+. imx-setup-release.sh $@
 
 declare -a ENVIRONMENT=('../sources/meta-compulab-bsp/meta-cl-som-imx8x/tools/setup-compulab-env')
 
