@@ -1,14 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/firmware:"
+do_deploy[noexec] = "1"
 
-SRC_URI += "\
-    file://cl-som-imx8x-scfw-tcm.bin \
-"
+DEPENDS = "scfw"
 
-SC_FIRMWARE_NAME_cl-som-imx8x = "cl-som-imx8x-scfw-tcm.bin"
-
-do_deploy() {
-	install -Dm 0644 ${WORKDIR}/${SC_FIRMWARE_NAME} ${DEPLOYDIR}/${BOOT_TOOLS}/${SC_FIRMWARE_NAME}
-	ln -sf ${SC_FIRMWARE_NAME} ${DEPLOYDIR}/${BOOT_TOOLS}/${symlink_name}
-}
-
-COMPATIBLE_MACHINE = "(cl-som-imx8x)"
