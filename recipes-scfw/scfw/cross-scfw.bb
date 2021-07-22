@@ -1,25 +1,4 @@
-# Recipe created by recipetool
-# This is the basis of a recipe and may need further editing in order to be fully functional.
-# (Feel free to remove these comments when editing.)
-
-# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
-# your responsibility to verify that the values are complete and correct.
-#
-# The following license files were not able to be identified and are
-# represented as "Unknown" below, you will need to check them yourself:
-#   share/doc/gcc-arm-none-eabi/license.txt
-#   share/doc/gcc-arm-none-eabi/html/cpp/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/gdb/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/gcc/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/gprof.html/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/ld.html/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/annotate/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/as.html/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/stabs/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/bfd.html/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/binutils.html/GNU-Free-Documentation-License.html
-#   share/doc/gcc-arm-none-eabi/html/gccint/GNU-Free-Documentation-License.html
-LICENSE = "Unknown"
+LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5 \
                     file://share/doc/gcc-arm-none-eabi/html/cpp/GNU-Free-Documentation-License.html;md5=706cc0ee111f9bac0eca6d3f95e51ab3 \
                     file://share/doc/gcc-arm-none-eabi/html/gdb/GNU-Free-Documentation-License.html;md5=7f2fe793f740dfdc3d843e7d3a691227 \
@@ -42,28 +21,17 @@ SRC_URI[sha512sum] = "62671793e812389fd667669d1894c9a01433f143a8c91a551f034b3fa5
 
 S = "${WORKDIR}/gcc-arm-none-eabi-10-2020-q4-major"
 
-# NOTE: no Makefile found, unable to determine what needs to be done
 inherit deploy
 
-do_configure () {
-	# Specify any needed configure commands here
-	:
-}
-
-do_compile () {
-	# Specify compilation commands here
-	:
-}
-
-do_install () {
-	# Specify install commands here
-	:
-}
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_install[noexec] = "1"
 
 do_deploy() {
-	# NOTE: unable to determine what to put here - there is a Makefile but no
-	# target named "install", so you will need to define this yourself
-	cp -a ${S} ${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi
+	mkdir -p ${DEPLOY_DIR_IMAGE}
+	if [ ! -L ${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi ];then
+		ln -s ${S} ${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi
+	fi
 }
 
 addtask deploy after do_compile
