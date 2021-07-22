@@ -1,0 +1,51 @@
+From 09b88e68a55a7d77adf2f203e21448b771502a3f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 22 Jul 2021 12:51:03 +0300
+Subject: [PATCH 12/12] cl-som-imx8x: config: Enable UUU support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/cl-som-imx8x_defconfig | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/configs/cl-som-imx8x_defconfig b/configs/cl-som-imx8x_defconfig
+index 9db5bbfe36..4708bbc2ff 100644
+--- a/configs/cl-som-imx8x_defconfig
++++ b/configs/cl-som-imx8x_defconfig
+@@ -32,7 +32,6 @@ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/compulab/cl-som-imx8x/cl-som-imx8x.cfg"
+ CONFIG_QSPI_BOOT=y
+ CONFIG_BOOTDELAY=3
+-CONFIG_SYS_STDIO_DEREGISTER=y
+ CONFIG_LOG=y
+ CONFIG_SPL_BOARD_INIT=y
+ CONFIG_SPL_SEPARATE_BSS=y
+@@ -57,8 +56,6 @@ CONFIG_CMD_CLK=y
+ CONFIG_CMD_DM=y
+ CONFIG_CMD_FUSE=y
+ CONFIG_CMD_GPIO=y
+-CONFIG_CMD_GPT=y
+-CONFIG_CMD_GPT_RENAME=y
+ CONFIG_CMD_I2C=y
+ CONFIG_CMD_MMC=y
+ CONFIG_CMD_DHCP=y
+@@ -88,7 +85,7 @@ CONFIG_USB_FUNCTION_FASTBOOT=y
+ CONFIG_FASTBOOT_BUF_ADDR=0x82800000
+ CONFIG_FASTBOOT_BUF_SIZE=0x40000000
+ CONFIG_FASTBOOT_USB_DEV=1
+-# CONFIG_FASTBOOT_UUU_SUPPORT is not set
++CONFIG_FASTBOOT_FLASH=y
+ CONFIG_MXC_GPIO=y
+ CONFIG_DM_PCA953X=y
+ CONFIG_DM_I2C=y
+@@ -162,7 +159,6 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_IMXDPUV1=y
+ CONFIG_VIDEO_IMX8_LVDS=y
+ CONFIG_VIDEO_IT6263_BRIDGE=y
+-CONFIG_FAT_WRITE=y
+ CONFIG_PANIC_HANG=y
+ CONFIG_SPL_TINY_MEMSET=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
+-- 
+2.17.1
+

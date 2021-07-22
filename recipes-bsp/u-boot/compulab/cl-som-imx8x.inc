@@ -12,4 +12,10 @@ SRC_URI_append_cl-som-imx8x = " \
 	file://0009-compulab-eeprom-Add-DM-support.patch			\
 	file://0010-cl-som-imx8x-Add-CL-SOM-iMX8X-board-to-U-Boot.patch		\
 	file://0011-Release-cl-som-imx8x-2.0.patch				\
+	file://0012-cl-som-imx8x-config-Enable-UUU-support.patch		\
 "
+
+do_configure_append_cl-som-imx8x() {
+	sed -i '/CONFIG_FASTBOOT_UUU_SUPPORT/d' ${S}/configs/cl-som-imx8x_defconfig
+	sed -i '$ a CONFIG_FASTBOOT_UUU_SUPPORT=y' ${S}/configs/cl-som-imx8x_defconfig
+}
