@@ -1,4 +1,4 @@
-LICENSE = "Unknown"
+LICENSE = "NXP-Binary-EULA"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a632fefd1c359980434f9389833cab3a"
 
 SRC_URI = "git://github.com/compulab-yokneam/scfw.git;protocol=https;branch=master"
@@ -39,6 +39,7 @@ do_install() {
 }
 
 do_deploy() {
+	mkdir -p ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/
 	for fw_file in ${S}/${LDEPLOY}/* ;do
 		install -Dm 0644 ${fw_file} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/
 	done
