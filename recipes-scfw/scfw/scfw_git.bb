@@ -39,7 +39,7 @@ do_install() {
 }
 
 do_deploy() {
-	mkdir -p ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/
+	install	-d ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}
 	for fw_file in ${S}/${LDEPLOY}/* ;do
 		install -Dm 0644 ${fw_file} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/
 	done

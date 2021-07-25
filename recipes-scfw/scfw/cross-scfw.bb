@@ -28,7 +28,7 @@ do_compile[noexec] = "1"
 do_install[noexec] = "1"
 
 do_deploy() {
-	mkdir -p ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOY_DIR_IMAGE}
 	if [ ! -L ${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi ];then
 		ln -s ${S} ${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi
 	fi
