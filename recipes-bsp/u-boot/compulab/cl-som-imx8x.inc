@@ -13,9 +13,6 @@ SRC_URI_append_cl-som-imx8x = " \
 	file://0010-cl-som-imx8x-Add-CL-SOM-iMX8X-board-to-U-Boot.patch		\
 	file://0011-Release-cl-som-imx8x-2.0.patch				\
 	file://0012-cl-som-imx8x-config-Enable-UUU-support.patch		\
+	file://0013-cl-som-imx8x-config-Fix-console-issue.patch			\
+	file://0014-cl-som-imx8x-config-Update-default-boot-environment.patch	\
 "
-
-do_configure_append_cl-som-imx8x() {
-	sed -i '/CONFIG_FASTBOOT_UUU_SUPPORT/d' ${S}/configs/cl-som-imx8x_defconfig
-	sed -i '$ a CONFIG_FASTBOOT_UUU_SUPPORT=y' ${S}/configs/cl-som-imx8x_defconfig
-}

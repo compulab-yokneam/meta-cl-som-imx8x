@@ -1,0 +1,26 @@
+From 6876304abdfdaae05a391fc3d6d2ca49be16ebda Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 25 Jul 2021 11:37:21 +0000
+Subject: [PATCH 12/12] cl-som-imx8x: config: Fix console issue
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ include/configs/cl-som-imx8x.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/cl-som-imx8x.h b/include/configs/cl-som-imx8x.h
+index 1b9bd50c01..624fc37d13 100644
+--- a/include/configs/cl-som-imx8x.h
++++ b/include/configs/cl-som-imx8x.h
+@@ -128,7 +128,7 @@
+     "script=boot.scr\0" \
+     "image=Image\0" \
+     "panel=NULL\0" \
+-    "console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200\0" \
++    "console=ttyLP0,115200 earlycon\0" \
+     "fdt_addr=0x83000000\0"            \
+     "fdt_high=0xffffffffffffffff\0"        \
+     "fdt_file=sb-imx8x.dtb\0" \
+-- 
+2.17.1
+
