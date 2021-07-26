@@ -1,0 +1,40 @@
+From 066108fa11c673a80e65464c80f83a18046a217f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 25 Jul 2021 14:19:52 +0000
+Subject: [PATCH 09/11] sb-imx8x: dts: Fix usdhc2 node
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/sb-imx8x.dts | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/sb-imx8x.dts b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
+index a3117e259cc8..47605eb699f5 100644
+--- a/arch/arm64/boot/dts/compulab/sb-imx8x.dts
++++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
+@@ -60,14 +60,14 @@
+ };
+ 
+ &usdhc2 {
+-	inctrl-names = "default", "state_100mhz", "state_200mhz";
+-	inctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
+-	inctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
+-	inctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
+-	us-width = <4>;
+-	d-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
+-	p-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
+-	tatus = "okay";
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	bus-width = <4>;
++	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
++	status = "okay";
+ };
+ 
+ &i2c1 {
+-- 
+2.17.1
+

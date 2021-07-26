@@ -7,5 +7,8 @@ SRC_URI_append = "								\
 	file://0006-sb-imx8x-enable-the-Goodix-touch-panel.patch		\
 	file://0007-sb-imx8x-add-mipi-panel-backlight.patch			\
 	file://0008-cl-som-imx8x-release-kernel-v5.4.70-cl-som-imx8x-2.0.patch	\
+	file://0009-sb-imx8x-dts-Fix-usdhc2-node.patch				\
+	file://0010-cl-som-imx8x-dts-Add-reserved-memory-disable-rpmsg.patch	\
+	file://0011-cl-som-imx8x-dts-Fix-pinmux-name.patch			\
 	file://defconfig							\
 "

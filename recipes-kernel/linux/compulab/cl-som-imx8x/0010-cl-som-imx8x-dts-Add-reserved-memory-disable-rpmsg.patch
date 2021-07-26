@@ -1,0 +1,75 @@
+From 475507a4bbf114926a08d925cfed7eeeee377e11 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 25 Jul 2021 14:22:38 +0000
+Subject: [PATCH 10/11] cl-som-imx8x: dts: Add reserved-memory; disable rpmsg
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/cl-som-imx8x.dts | 44 ++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/cl-som-imx8x.dts b/arch/arm64/boot/dts/compulab/cl-som-imx8x.dts
+index 54e3b5e53f41..2931bdb151f0 100644
+--- a/arch/arm64/boot/dts/compulab/cl-som-imx8x.dts
++++ b/arch/arm64/boot/dts/compulab/cl-som-imx8x.dts
+@@ -54,6 +54,47 @@
+ 			regulator-always-on;
+ 		};
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		vdev0vring0: vdev0vring0@90000000 {
++                        compatible = "shared-dma-pool";
++			reg = <0 0x90000000 0 0x8000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@90008000 {
++                        compatible = "shared-dma-pool";
++			reg = <0 0x90008000 0 0x8000>;
++			no-map;
++		};
++
++		vdev1vring0: vdev1vring0@90010000 {
++                        compatible = "shared-dma-pool";
++			reg = <0 0x90010000 0 0x8000>;
++			no-map;
++		};
++
++		vdev1vring1: vdev1vring1@90018000 {
++                        compatible = "shared-dma-pool";
++			reg = <0 0x90018000 0 0x8000>;
++			no-map;
++		};
++
++		rsc-table {
++			reg = <0 0x900ff000 0 0x1000>;
++			no-map;
++		};
++
++		vdevbuffer: vdevbuffer {
++                        compatible = "shared-dma-pool";
++			reg = <0 0x90400000 0 0x100000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &lpuart0 {
+@@ -110,7 +151,8 @@
+ 	 */
+ 	vdev-nums = <2>;
+ 	reg = <0x0 0x90000000 0x0 0x20000>;
+-	status = "okay";
++	memory-region = <&vdevbuffer>;
++	status = "disabled";
+ };
+ 
+ &fec1 {
+-- 
+2.17.1
+
