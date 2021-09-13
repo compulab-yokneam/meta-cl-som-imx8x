@@ -16,6 +16,7 @@ LDEPLOY = "DEPLOY"
 RDEPLOY = "/opt/soc/scfw"
 
 BOOT_TOOLS = "imx-boot-tools"
+MEM_CONFIG ?= "micron"
 
 do_configure() {
 	oe_runmake clean
@@ -27,7 +28,7 @@ do_compile() {
 	export CROSS_COMPILE=${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi/bin/arm-none-eabi-
 
 	oe_runmake clean
-	oe_runmake SOC=MX8QX B=clsom R=B0 D=1 M=1 DL=5 V=0 qx
+	oe_runmake SOC=MX8QX B=clsom R=B0 D=1 M=1 DL=5 V=0 DDR_CON=${MEM_CONFIG} qx
 	cp ${S}/${SC_FIRMWARE_NAME} ${S}/${LDEPLOY}/
 }
 
