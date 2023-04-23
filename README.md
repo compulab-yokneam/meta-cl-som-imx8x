@@ -10,7 +10,7 @@ Supported CompuLab machines:
 # 1 Setup environment
 ## 1.1 Prepare NXP BSP
 ```
-repo init -u git://source.codeaurora.org/external/imx/imx-manifest.git -b imx-linux-zeus -m imx-5.4.70-2.3.0.xml
+repo init -u https://github.com/nxp-imx/imx-manifest.git -b imx-linux-zeus -m imx-5.4.70-2.3.0.xml
 repo sync
 ```
 ## 1.2 Download CompuLab meta layer
@@ -23,7 +23,7 @@ git clone -b devel https://github.com/compulab-yokneam/meta-cl-som-imx8x.git sou
 ```export COMPULAB_MACHINE=cl-som-imx8x```
 
 ## 2.2 Run CompuLab Linux Yocto Project setup
-|NOTE|Refer to the [NXP Readme](https://source.codeaurora.org/external/imx/meta-imx/tree/README?h=zeus-5.4.70-2.3.0) for details about how to select a correct backend & distro.|
+|NOTE|Refer to the [NXP Readme](https://github.com/nxp-imx/meta-imx/blob/zeus-5.4.70-2.3.0/README) for details about how to select a correct backend & distro.|
 |---|---|
 ```
 
