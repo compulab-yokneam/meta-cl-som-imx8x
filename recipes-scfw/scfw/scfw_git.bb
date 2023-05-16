@@ -1,5 +1,5 @@
 LICENSE = "NXP-Binary-EULA"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a632fefd1c359980434f9389833cab3a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5a0bf11f745e68024f37b4724a5364fe"
 
 SRC_URI = "git://github.com/compulab-yokneam/scfw.git;protocol=https;branch=master"
 
@@ -16,7 +16,7 @@ LDEPLOY = "DEPLOY"
 RDEPLOY = "/opt/soc/scfw"
 
 BOOT_TOOLS = "imx-boot-tools"
-MEM_CONFIG ?= "micron"
+MEM_CONFIG ?= "samsung"
 
 do_configure() {
 	oe_runmake clean
@@ -28,7 +28,7 @@ do_compile() {
 	export CROSS_COMPILE=${DEPLOY_DIR_IMAGE}/gcc-arm-none-eabi/bin/arm-none-eabi-
 
 	oe_runmake clean
-	oe_runmake SOC=MX8QX B=clsom R=B0 D=1 M=1 DL=5 V=0 DDR_CON=${MEM_CONFIG} qx
+	oe_runmake SOC=MX8QX B=clsom R=B0 D=1 M=1 DL=5 V=0 DEBUG_UART=0 DDR_CON=${MEM_CONFIG} qx
 	cp ${S}/${SC_FIRMWARE_NAME} ${S}/${LDEPLOY}/
 }
 
