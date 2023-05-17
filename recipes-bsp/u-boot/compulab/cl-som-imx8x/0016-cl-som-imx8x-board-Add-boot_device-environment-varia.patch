@@ -1,0 +1,68 @@
+From 5a204ee928c784a99e88079270de7286ca35a5d6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 17 May 2023 12:35:44 +0300
+Subject: [PATCH] cl-som-imx8x: board: Add boot_device environment variable
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0016-cl-som-imx8x-board-Add-boot_device-environment-varia.patch
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/cl-som-imx8x/cl-som-imx8x.c | 27 +++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/board/compulab/cl-som-imx8x/cl-som-imx8x.c b/board/compulab/cl-som-imx8x/cl-som-imx8x.c
+index 17a7682b97..eabf2b09ab 100644
+--- a/board/compulab/cl-som-imx8x/cl-som-imx8x.c
++++ b/board/compulab/cl-som-imx8x/cl-som-imx8x.c
+@@ -23,6 +23,7 @@
+ #include <asm/arch/sys_proto.h>
+ #include <usb.h>
+ #include <power-domain.h>
++#include <asm/mach-imx/boot_mode.h>
+ #include "../common/eeprom.h"
+ 
+ 
+@@ -432,6 +433,30 @@ int board_mmc_get_env_dev(int devno)
+ 	return devno;
+ }
+ 
++enum boot_device get_boot_device(void);
++static void set_bootdev_env(void)
++{
++	enum boot_device bt_dev = get_boot_device();
++
++	switch (bt_dev) {
++	case SD1_BOOT:
++	case SD2_BOOT:
++	case SD3_BOOT:
++	case MMC1_BOOT:
++	case MMC2_BOOT:
++	case MMC3_BOOT:
++		env_set("boot_device", "sd");
++		break;
++	case FLEXSPI_BOOT:
++		env_set("boot_device", "spi");
++		break;
++	default:
++		env_set("boot_device", "unknown");
++		break;
++	}
++	return 0;
++}
++
+ int board_late_init(void)
+ {
+ 	int ret;
+@@ -460,6 +485,6 @@ int board_late_init(void)
+ #else
+ 	env_set("sec_boot", "no");
+ #endif
+-
++	set_bootdev_env();
+ 	return 0;
+ }
+-- 
+2.17.1
+

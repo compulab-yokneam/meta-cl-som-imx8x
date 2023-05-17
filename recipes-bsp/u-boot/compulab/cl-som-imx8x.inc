@@ -15,4 +15,6 @@ SRC_URI:append = " \
 	file://0012-cl-som-imx8x-config-Enable-UUU-support.patch		\
 	file://0013-cl-som-imx8x-config-Fix-console-issue.patch			\
 	file://0014-cl-som-imx8x-config-Update-default-boot-environment.patch	\
+	file://0015-cl-som-imx8x-config-Enable-CMD_IMPORTENV.patch \
+	file://0016-cl-som-imx8x-board-Add-boot_device-environment-varia.patch \
 "
