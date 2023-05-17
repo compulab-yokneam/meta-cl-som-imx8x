@@ -1,12 +1,3 @@
-#@TYPE: Machine
-#@NAME: CompuLab CL-SOM-iMX8X Evaluation Kit
-#@SOC: i.MX8X
-#@DESCRIPTION: Machine configuration for CompuLab cl-som-imx8x
-#@MAINTAINER: compulab@compulab.co.il
-
-MACHINEOVERRIDES =. "imx8qxp-mek:"
-require conf/machine/imx8qxp-mek.conf
-
 # U-Boot #
 UBOOT_CONFIG ?= "sd"
 UBOOT_CONFIG[sd] = "cl-som-imx8x_defconfig,sdcard"
