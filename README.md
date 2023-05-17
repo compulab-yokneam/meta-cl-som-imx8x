@@ -20,7 +20,10 @@ git clone -b devel-C0 https://github.com/compulab-yokneam/meta-cl-som-imx8x.git 
 
 # 2 Build
 ## 2.1 Define COMPULAB_MACHINE environment variable
-```export COMPULAB_MACHINE=cl-som-imx8x```
+|Revision | Yocto machine |
+|---|---|
+|B0| ```export COMPULAB_MACHINE=cl-som-imx8xb0```|
+|C0| ```export COMPULAB_MACHINE=cl-som-imx8xc0```|
 
 ## 2.2 Run CompuLab Linux Yocto Project setup
 |NOTE|Refer to the [NXP Readme](https://github.com/nxp-imx/meta-imx/blob/kirkstone-5.15.71-2.2.0/README) for details about how to select a correct backend & distro.|
@@ -29,11 +32,7 @@ git clone -b devel-C0 https://github.com/compulab-yokneam/meta-cl-som-imx8x.git 
 
 MACHINE=${COMPULAB_MACHINE} DISTRO=fsl-imx-xwayland source sources/meta-cl-som-imx8x/tools/setup-cl-som-imx8x-env -b build-${COMPULAB_MACHINE}
 ```
-## 2.3 Build image
-```
-bitbake -k cl-som-imx8x-eval
-```
-## 2.4 Build bootloader only
+## 2.3 Build bootloader only
 |U-Boot Location|`conf/local.conf` string to add|file name|
 |---|---|---|
 | SD | UBOOT_CONFIG = "sd" | imx-boot-cl-som-imx8x-sd.bin-flash_spl |
