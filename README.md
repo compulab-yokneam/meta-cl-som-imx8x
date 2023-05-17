@@ -10,12 +10,12 @@ Supported CompuLab machines:
 # 1 Setup environment
 ## 1.1 Prepare NXP BSP
 ```
-repo init -u https://github.com/nxp-imx/imx-manifest.git -b imx-linux-zeus -m imx-5.4.70-2.3.0.xml
+repo init -u git://github.com/nxp-imx/imx-manifest.git -b imx-linux-kirkstone -m imx-5.15.71-2.2.0.xml
 repo sync
 ```
 ## 1.2 Download CompuLab meta layer
 ```
-git clone -b devel https://github.com/compulab-yokneam/meta-cl-som-imx8x.git sources/meta-cl-som-imx8x/
+git clone -b devel-C0 https://github.com/compulab-yokneam/meta-cl-som-imx8x.git sources/meta-cl-som-imx8x/
 ```
 
 # 2 Build
@@ -23,11 +23,11 @@ git clone -b devel https://github.com/compulab-yokneam/meta-cl-som-imx8x.git sou
 ```export COMPULAB_MACHINE=cl-som-imx8x```
 
 ## 2.2 Run CompuLab Linux Yocto Project setup
-|NOTE|Refer to the [NXP Readme](https://github.com/nxp-imx/meta-imx/blob/zeus-5.4.70-2.3.0/README) for details about how to select a correct backend & distro.|
+|NOTE|Refer to the [NXP Readme](https://github.com/nxp-imx/meta-imx/blob/kirkstone-5.15.71-2.2.0/README) for details about how to select a correct backend & distro.|
 |---|---|
 ```
 
-MACHINE=${COMPULAB_MACHINE} DISTRO=fsl-imx-xwayland source sources/meta-cl-som-imx8x/tools/setup-cl-som-imx8x-env -b build-xwayland
+MACHINE=${COMPULAB_MACHINE} DISTRO=fsl-imx-xwayland source sources/meta-cl-som-imx8x/tools/setup-cl-som-imx8x-env -b build-${COMPULAB_MACHINE}
 ```
 ## 2.3 Build image
 ```
@@ -36,8 +36,8 @@ bitbake -k cl-som-imx8x-eval
 ## 2.4 Build bootloader only
 |U-Boot Location|`conf/local.conf` string to add|file name|
 |---|---|---|
-| SD | UBOOT_CONFIG = "sd" | imx-boot-cl-som-imx8x-sd.bin-imx-boot-cl-som-imx8x-sd.bin|
-| flexspi | UBOOT_CONFIG = "sf" | imx-boot-cl-som-imx8x-sf.bin-imx-boot-cl-som-imx8x-sf.bin|
+| SD | UBOOT_CONFIG = "sd" | imx-boot-cl-som-imx8x-sd.bin-flash_spl |
+| flexspi | UBOOT_CONFIG = "fspi" | imx-boot-cl-som-imx8x-fspi.bin-flash_spl_flexspi |
 ```
 bitbake -k imx-boot
 ```

@@ -48,7 +48,7 @@ do_deploy() {
 
 addtask deploy after do_compile
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 	${RDEPLOY}/* \
 "
 

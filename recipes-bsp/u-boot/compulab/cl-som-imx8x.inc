@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/cl-som-imx8x:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/cl-som-imx8x:"
 
-SRC_URI_append_cl-som-imx8x = " \
+SRC_URI:append = " \
 	file://0001-cmd-eeprom-fix-disregarding-of-the-i2c_bus-parameter.patch	\
 	file://0002-eeprom-layout-remove-buf-from-the-eeprom_field-struc.patch	\
 	file://0003-eeprom-layout-add-field-functions-read.patch		\
